@@ -46,12 +46,9 @@ async function main() {
     auth: `token ${token}`,
     userAgent: "pascalgn/automerge-action"
   });
-
-  const labels = parseLabels(process.env.LABELS);
   const automerge = process.env.AUTOMERGE || "automerge";
-  const autorebase = process.env.AUTOREBASE || "autorebase";
   const mergeMethod = process.env.MERGE_METHOD || "merge";
-  const config = { labels, automerge, autorebase, mergeMethod };
+  const config = {automerge, mergeMethod };
 
   logger.debug("Configuration:", config);
 
@@ -76,21 +73,6 @@ function env(name) {
     throw new ClientError(`environment variable ${name} not set!`);
   }
   return val;
-}
-
-function parseLabels(str) {
-  const labels = {
-    required: [],
-    blocking: []
-  };
-  if (str) {
-    const arr = str.split(",").map(s => s.trim());
-    labels.required = arr.filter(s => !s.startsWith("!"));
-    labels.blocking = arr
-      .filter(s => s.startsWith("!") && s.length > 1)
-      .map(s => s.substr(1));
-  }
-  return labels;
 }
 
 if (require.main === module) {
